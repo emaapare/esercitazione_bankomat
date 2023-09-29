@@ -32,7 +32,7 @@ namespace BankomatSimulator
         private string _nome;
         private List<Utente> _utenti;
         private SortedList<int,Funzionalita> _funzionalita;
-
+        public Banche b;
 
         private Utente _utenteCorrente;
 

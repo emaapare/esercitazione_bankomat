@@ -11,6 +11,7 @@ namespace BankomatSimulator
    
     class InterfacciaUtente
     {
+        
         enum Richiesta
         {
             SchermataDiBenvenuto,
@@ -22,10 +23,10 @@ namespace BankomatSimulator
             Uscita
         };
 
-        private SortedList<int, Banca> _banche;
+        private SortedList<int, Banche> _banche;
         private Banca _bancaCorrente;
 
-        public InterfacciaUtente(SortedList<int, Banca> banche)
+        public InterfacciaUtente(SortedList<int, Banche> banche)
         {
             _banche = banche;
         }
@@ -303,7 +304,7 @@ namespace BankomatSimulator
                             richiesta = Richiesta.Uscita;
                         else
                         {
-                            _bancaCorrente = _banche[rispostaUtente];
+                            _bancaCorrente.b = _banche[rispostaUtente];
                             richiesta = Richiesta.Login;
                         }
                         break;

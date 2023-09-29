@@ -10,7 +10,6 @@ namespace BankomatSimulator
     class Program
     {
         static SortedList<int, Banca> banche;
-        static SqlConnection sqlConnection;
 
         /// <summary>
         /// Funzione di inizializzazione del Bankomat Simulator.
@@ -89,9 +88,10 @@ namespace BankomatSimulator
 
         }
         static void Main(string[] args)
-        {            
+        {
+            var ctx = new soluzione_bankomatEntities();
             Inizializza();
-            InterfacciaUtente interfacciaUtente = new InterfacciaUtente(banche);
+            InterfacciaUtente interfacciaUtente = new InterfacciaUtente();
             interfacciaUtente.Esegui();
         }
     }
