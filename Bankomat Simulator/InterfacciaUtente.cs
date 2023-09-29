@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,7 +25,7 @@ namespace BankomatSimulator
         private SortedList<int, Banca> _banche;
         private Banca _bancaCorrente;
 
-        public InterfacciaUtente(SortedList<int,Banca> banche)
+        public InterfacciaUtente(SortedList<int, Banca> banche)
         {
             _banche = banche;
         }
@@ -75,18 +76,32 @@ namespace BankomatSimulator
         /// <returns>la scelta dell'utente - 0 per uscire</returns>
         private int SchermataDiBenvenuto()
         {
+            var ctx = new soluzione_bankomatEntities();
             int scelta = -1;
             while (scelta == -1)
             {
                 StampaIntestazione("Selezione Banca");
 
-                foreach (var banca in _banche)
+                //foreach (var banca in _banche)
+                //{
+                //    Console.WriteLine($"{banca.Key.ToString()} - {banca.Value.Nome}");
+                //}
+
+                int max;
+
+                using(ctx)
                 {
-                    Console.WriteLine($"{banca.Key.ToString()} - {banca.Value.Nome}");
+                    foreach (Banche c in ctx.Banche)
+                    {
+                        Console.WriteLine(c.Nome);
+                    }
+
+                    max = ctx.Banche.Count();
                 }
+                
                 Console.WriteLine("0 - Uscita");
 
-                scelta = ScegliVoceMenu(0, _banche.Count);
+                scelta = ScegliVoceMenu(0, max);
             }
 
             return scelta;
@@ -102,7 +117,7 @@ namespace BankomatSimulator
         /// <see langword="false"/> altrimenti
         /// </returns>
         private bool Login()
-        {
+        {            
             bool autenticato = false;
 
             Utente credenziali = new Utente();
@@ -110,9 +125,13 @@ namespace BankomatSimulator
             StampaIntestazione($"Login - {_bancaCorrente.Nome}");
 
             Console.Write("Nome utente: ");
-            credenziali.NomeUtente = Console.ReadLine();
+            //credenziali.NomeUtente = Console.ReadLine();
+            string nomeutente = Console.ReadLine();
             Console.Write("Password: ");
-            credenziali.Password = Console.ReadLine();
+            //credenziali.Password = Console.ReadLine();
+            string password = Console.ReadLine();
+
+            //var accountTrovato = ctx.Utenti.FirstOrDefault(c => c.NomeUtente == nomeutente && c.Password == password);
 
             Banca.EsitoLogin esitoLogin =
                 _bancaCorrente.Login(credenziali, out Utente utente);
@@ -269,6 +288,7 @@ namespace BankomatSimulator
         ///</summary>
         public void Esegui()
         {
+            var ctx = new soluzione_bankomatEntities();
             int rispostaUtente = 0;
             Richiesta richiesta = Richiesta.SchermataDiBenvenuto;
 
@@ -283,7 +303,6 @@ namespace BankomatSimulator
                             richiesta = Richiesta.Uscita;
                         else
                         {
-                            
                             _bancaCorrente = _banche[rispostaUtente];
                             richiesta = Richiesta.Login;
                         }
